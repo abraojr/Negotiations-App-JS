@@ -10,4 +10,8 @@ class ListNegotiations {
     add(negotiation) {
         this._negotiations.push(negotiation);
     }
+
+    empty() {
+        this._negotiations = [];
+    }
 }

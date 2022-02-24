@@ -25,6 +25,13 @@ class NegotiationController {
         this._clearForm();
     }
 
+    delete() {
+        this._listNegotiations.empty();
+        this._negotiationsView.update(this._listNegotiations);
+        this._message.text = "Negotiations successfully deleted";
+        this._messageView.update(this._message);
+    }
+
     _createNegotiation() {
         return new Negotiation(
             DateHelper.textToDate(this._inputDate.value),
