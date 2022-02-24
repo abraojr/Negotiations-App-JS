@@ -6,13 +6,9 @@ class NegotiationController {
         this._inputQuantity = $("#quantity");
         this._inputValue = $("#value");
 
-        this._negotiationsView = new NegotiationsView($("#negotiationsView"));
+        this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty");
 
-        this._listNegotiations = new Bind(new ListNegotiations(), this._negotiationsView, ["add", "empty"]);
-
-        this._messageView = new MessageView($("#messageView"));
-
-        this._message = new Bind(new Message(), this._messageView, ["text"]);
+        this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
     }
 
     add(event) {
