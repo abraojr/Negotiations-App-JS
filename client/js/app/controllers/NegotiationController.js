@@ -1,29 +1,22 @@
 class NegotiationController {
 
     constructor() {
-        let self = this;
         let $ = document.querySelector.bind(document);
         this._inputDate = $("#date");
         this._inputQuantity = $("#quantity");
         this._inputValue = $("#value");
 
-        this._listNegotiations = new Proxy(new ListNegotiations(), {
-            get(target, prop, receiver) {
-                if (["add", "empty"].includes(prop) && typeof (target[prop]) == typeof (Function)) {
-
-                    return function () {
-                        Reflect.apply(target[prop], target, arguments);
-                        self._negotiationsView.update(target);
-                    }
-                }
-                return Reflect.get(target, prop, receiver);
-            }
-        });
+        this._listNegotiations = ProxyFactory.create(
+            new ListNegotiations(),
+            ["add", "empty"], model => this._negotiationsView.update(model));
 
         this._negotiationsView = new NegotiationsView($("#negotiationsView"));
         this._negotiationsView.update(this._listNegotiations);
 
-        this._message = new Message();
+        this._message = ProxyFactory.create(
+            new Message(),
+            ["text"], model => this._messageView.update(model));
+
         this._messageView = new MessageView($("#messageView"));
         this._messageView.update(this._message);
     }
@@ -31,16 +24,13 @@ class NegotiationController {
     add(event) {
         event.preventDefault();
         this._listNegotiations.add(this._createNegotiation());
-
         this._message.text = "Negotiation added successfully";
-        this._messageView.update(this._message);
         this._clearForm();
     }
 
     delete() {
         this._listNegotiations.empty();
         this._message.text = "Negotiations successfully deleted";
-        this._messageView.update(this._message);
     }
 
     _createNegotiation() {
