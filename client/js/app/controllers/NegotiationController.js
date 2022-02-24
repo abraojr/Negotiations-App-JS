@@ -14,13 +14,27 @@ class NegotiationController {
     add(event) {
         event.preventDefault();
         this._listNegotiations.add(this._createNegotiation());
-        this._message.text = "Negotiation added successfully";
+        this._message.text = "Negotiation added successfully.";
         this._clearForm();
+    }
+
+    importNegotiations() {
+        let service = new NegotiationService();
+
+        service.getNegotiationOfTheWeek((error, negotiation) => {
+            if (error) {
+                this._message.text = error;
+                return;
+            }
+
+            negotiation.forEach(negotiation => this._listNegotiations.add(negotiation));
+            this._message.text = "Successfully imported negotiations!";
+        });
     }
 
     delete() {
         this._listNegotiations.empty();
-        this._message.text = "Negotiations successfully deleted";
+        this._message.text = "Negotiations successfully deleted.";
     }
 
     _createNegotiation() {
