@@ -6,9 +6,9 @@ class NegotiationController {
         this._inputQuantity = $("#quantity");
         this._inputValue = $("#value");
 
-        this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty");
-
+        this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty", "sortBy", "invertSortBy");
         this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
+        this._currentOrder = "";
     }
 
     add(event) {
@@ -16,6 +16,15 @@ class NegotiationController {
         this._listNegotiations.add(this._createNegotiation());
         this._message.text = "Negotiation added successfully.";
         this._clearForm();
+    }
+
+    sortBy(column) {
+        if (this._currentOrder == column) {
+            this._listNegotiations.invertSortBy();
+        } else {
+            this._listNegotiations.sortBy((a, b) => a[column] - b[column]);
+        }
+        this._currentOrder = column;
     }
 
     importNegotiations() {

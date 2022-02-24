@@ -9,10 +9,10 @@ class NegotiationsView extends View {
         <table class="table table-hover table-bordered">
             <thead>
                  <tr>
-                    <th>DATE</th>
-                    <th>QUANTITY</th>
-                    <th>VALUE</th>
-                    <th>VOLUME</th>
+                 <th onclick="negotiationController.sortBy('date')">DATE</th>
+                 <th onclick="negotiationController.sortBy('quantity')">QUANTITY</th>
+                 <th onclick="negotiationController.sortBy('value')">VALUE</th>
+                 <th onclick="negotiationController.sortBy('volume')">VOLUME</th>
                 </tr>
             </thead>
         

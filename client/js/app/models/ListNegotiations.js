@@ -14,4 +14,12 @@ class ListNegotiations {
     empty() {
         this._negotiations = [];
     }
+
+    sortBy(criterion) {
+        this._negotiations.sort(criterion);
+    }
+
+    invertSortBy() {
+        this._negotiations.reverse();
+    }
 }
