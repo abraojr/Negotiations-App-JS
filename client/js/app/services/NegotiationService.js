@@ -1,25 +1,21 @@
 class NegotiationService {
 
+    constructor() {
+        this._http = new HttpService();
+    }
+
     getNegotiationOfTheWeek() {
 
         return new Promise((resolve, reject) => {
 
-            let xhr = new XMLHttpRequest();
-
-            xhr.open("GET", "negotiations/week");
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-
-                    if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.responseText).map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                    } else {
-                        console.log(xhr.responseText);
-                        reject("Negotiations of the week could not be obtained.");
-                    }
-                }
-            }
-            xhr.send();
+            this._http
+                .get("negotiations/week")
+                .then(negotiations => {
+                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
+                }).catch(error => {
+                    console.log(error);
+                    reject("Negotiations of the week could not be obtained.");
+                });
         });
     }
 
@@ -27,22 +23,14 @@ class NegotiationService {
 
         return new Promise((resolve, reject) => {
 
-            let xhr = new XMLHttpRequest();
-
-            xhr.open("GET", "negotiations/previous");
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-
-                    if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.responseText).map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                    } else {
-                        console.log(xhr.responseText);
-                        reject("Negotiations of the week could not be obtained.");
-                    }
-                }
-            }
-            xhr.send();
+            this._http
+                .get("negotiations/previous")
+                .then(negotiations => {
+                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
+                }).catch(error => {
+                    console.log(error);
+                    reject("Negotiations of the previous week could not be obtained.");
+                });
         });
     }
 
@@ -50,22 +38,14 @@ class NegotiationService {
 
         return new Promise((resolve, reject) => {
 
-            let xhr = new XMLHttpRequest();
-
-            xhr.open("GET", "negotiations/last");
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-
-                    if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.responseText).map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                    } else {
-                        console.log(xhr.responseText);
-                        reject("Negotiations of the week could not be obtained.");
-                    }
-                }
-            }
-            xhr.send();
+            this._http
+                .get("negotiations/last")
+                .then(negotiations => {
+                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
+                }).catch(error => {
+                    console.log(error);
+                    reject("Negotiations of the last week could not be obtained.");
+                });
         });
     }
 }
