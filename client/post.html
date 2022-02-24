@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Negotiations App</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+</head>
+
+<body class="container">
+    <form class="form">
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" class="form-control" required autofocus />
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" min="1" step="1" id="quantity" class="form-control" value="1" required>
+        </div>
+
+        <div class="form-group">
+            <label for="value">Value</label>
+            <input type="number" id="value" class="form-control" min="0.01" step="0.01" value="0.0" required>
+        </div>
+
+        <button class="btn btn-primary" type="submit" onclick="sendPost(event)">Send data to the server</button>
+    </form>
+
+    <script src="js/app/services/HttpService.js"></script>
+    <script>
+        function sendPost(event) {
+            event.preventDefault();
+            console.log("Sending post...");
+
+            let $ = document.querySelector.bind(document);
+            inputDate = $("#date");
+            inputQuantity = $("#quantity");
+            inputValue = $("#value");
+
+            let negotiation = {
+                date: inputDate.value,
+                quantity: inputQuantity.value,
+                value: inputValue.value
+            };
+
+            new HttpService()
+                .post("/negotiations", negotiation)
+                .then(() => {
+                    inputDate.value = "";
+                    inputQuantity.value = 1;
+                    inputValue.value = 0.0;
+                    inputDate.focus();
+                    alert("Negotiation sent successfully");
+                })
+                .catch(error => alert(`Unable to send negotiation: ${error}`));
+        }
+    </script>
+
+</body>
+
+</html>

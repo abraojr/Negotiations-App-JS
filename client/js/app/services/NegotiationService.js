@@ -6,47 +6,38 @@ class NegotiationService {
 
     getNegotiationOfTheWeek() {
 
-        return new Promise((resolve, reject) => {
-
-            this._http
-                .get("negotiations/week")
-                .then(negotiations => {
-                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                }).catch(error => {
-                    console.log(error);
-                    reject("Negotiations of the week could not be obtained.");
-                });
-        });
+        return this._http
+            .get("negotiations/week")
+            .then(negotiations => {
+                return negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value));
+            }).catch(error => {
+                console.log(error);
+                throw new Error("Negotiations of the week could not be obtained.");
+            });
     }
 
     getNegotiationOfThePreviousWeek() {
 
-        return new Promise((resolve, reject) => {
-
-            this._http
-                .get("negotiations/previous")
-                .then(negotiations => {
-                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                }).catch(error => {
-                    console.log(error);
-                    reject("Negotiations of the previous week could not be obtained.");
-                });
-        });
+        return this._http
+            .get("negotiations/previous")
+            .then(negotiations => {
+                return negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value));
+            }).catch(error => {
+                console.log(error);
+                throw new Error("Negotiations of the previous week could not be obtained.");
+            });
     }
 
     getNegotiationOfTheLastWeek() {
 
-        return new Promise((resolve, reject) => {
-
-            this._http
-                .get("negotiations/last")
-                .then(negotiations => {
-                    resolve(negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value)));
-                }).catch(error => {
-                    console.log(error);
-                    reject("Negotiations of the last week could not be obtained.");
-                });
-        });
+        return this._http
+            .get("negotiations/last")
+            .then(negotiations => {
+                return negotiations.map(object => new Negotiation(new Date(object.date), object.quantity, object.value));
+            }).catch(error => {
+                console.log(error);
+                throw new Error("Negotiations of the last week could not be obtained.");
+            });
     }
 
     getNegotiations() {
