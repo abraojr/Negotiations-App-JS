@@ -48,4 +48,14 @@ class NegotiationService {
                 });
         });
     }
+
+    getNegotiations() {
+        return Promise.all([this.getNegotiationOfTheWeek(), this.getNegotiationOfThePreviousWeek(), this.getNegotiationOfTheLastWeek()])
+            .then(periods => {
+                let negotiations = periods.reduce((data, period) => data.concat(period), []);
+                return negotiations;
+            }).catch(error => {
+                throw new Error(error);
+            });
+    }
 }
