@@ -5,7 +5,6 @@ class NegotiationController {
         this._inputDate = $("#date");
         this._inputQuantity = $("#quantity");
         this._inputValue = $("#value");
-
         this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty", "sortBy", "invertSortBy");
         this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
         this._currentOrder = "";
@@ -28,6 +27,7 @@ class NegotiationController {
     }
 
     add(event) {
+        debugger;
         event.preventDefault();
 
         let negotiation = this._createNegotiation();
@@ -36,7 +36,7 @@ class NegotiationController {
             .register(negotiation)
             .then(message => {
                 this._listNegotiations.add(negotiation);
-                this.message.text = message;
+                this._message.text = message;
                 this._clearForm();
             })
             .catch(error => this._message.text = error);
@@ -80,6 +80,7 @@ class NegotiationController {
             parseFloat(this._inputValue.value)
         );
     }
+
     _clearForm() {
         this._inputDate.value = "";
         this._inputQuantity.value = 1;
