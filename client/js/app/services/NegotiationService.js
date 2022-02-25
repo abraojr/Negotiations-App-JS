@@ -86,4 +86,16 @@ class NegotiationService {
                 throw new Error("Could not remove negotiations.")
             });
     }
+
+    import(currentList) {
+        return this.getNegotiations()
+            .then(negotiations =>
+                negotiations.filter(negotiation =>
+                    !currentList.some(existingNegotiation =>
+                        JSON.stringify(negotiation) == JSON.stringify(existingNegotiation))))
+            .catch(error => {
+                console.log(error);
+                throw new Error("Could not import negotiations.");
+            });
+    }
 }
