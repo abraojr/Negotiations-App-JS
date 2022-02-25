@@ -24,6 +24,6 @@ class Negotiation {
     }
 
     isEquals(otherNegotiation) {
-        return JSON.stringify(this) == JSON.stringify(otherNegotiation);
+        return this._date.getTime() == otherNegotiation.date.getTime() && this._value == otherNegotiation.value;
     }
 }
