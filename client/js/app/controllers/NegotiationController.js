@@ -54,6 +54,10 @@ class NegotiationController {
         let service = new NegotiationService();
 
         service.getNegotiations()
+            .then(negotiations =>
+                negotiations.filter(negotiation =>
+                    !this._listNegotiations.negotiations.some(existingNegotiation =>
+                        JSON.stringify(negotiation) == JSON.stringify(existingNegotiation))))
             .then(negotiations => {
                 negotiations.forEach(negotiation => this._listNegotiations.add(negotiation));
                 this._message.text = "Successfully imported negotiations of the period.";
