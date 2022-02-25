@@ -22,4 +22,8 @@ class Negotiation {
     get volume() {
         return this._quantity * this._value;
     }
+
+    isEquals(otherNegotiation) {
+        return JSON.stringify(this) == JSON.stringify(otherNegotiation);
+    }
 }

@@ -92,7 +92,7 @@ class NegotiationService {
             .then(negotiations =>
                 negotiations.filter(negotiation =>
                     !currentList.some(existingNegotiation =>
-                        JSON.stringify(negotiation) == JSON.stringify(existingNegotiation))))
+                        negotiation.isEquals(existingNegotiation))))
             .catch(error => {
                 console.log(error);
                 throw new Error("Could not import negotiations.");
