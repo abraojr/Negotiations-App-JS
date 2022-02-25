@@ -9,13 +9,36 @@ class NegotiationController {
         this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty", "sortBy", "invertSortBy");
         this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
         this._currentOrder = "";
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => new NegotiationDao(connection))
+            .then(dao => dao.listAll())
+            .then(negotiations => negotiations.forEach(negotiation => this._listNegotiations.add(negotiation)))
+            .catch(error => {
+                console.log(error);
+                this._message.text = error;
+            });
     }
 
     add(event) {
         event.preventDefault();
-        this._listNegotiations.add(this._createNegotiation());
-        this._message.text = "Negotiation added successfully.";
-        this._clearForm();
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => {
+
+                let negotiation = this._createNegotiation();
+
+                new NegotiationDao(connection)
+                    .add(negotiation)
+                    .then(() => {
+                        this._listNegotiations.add(negotiation);
+                        this._message.text = "Negotiation added successfully.";
+                        this._clearForm();
+                    });
+            })
+            .catch(error => this._message.text = error);
     }
 
     sortBy(column) {
@@ -38,15 +61,22 @@ class NegotiationController {
     }
 
     delete() {
-        this._listNegotiations.empty();
-        this._message.text = "Negotiations successfully deleted.";
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => new NegotiationDao(connection))
+            .then(dao => dao.deleteAll())
+            .then(message => {
+                this._message.text = message;
+                this._listNegotiations.empty();
+            });
     }
 
     _createNegotiation() {
         return new Negotiation(
             DateHelper.textToDate(this._inputDate.value),
-            this._inputQuantity.value,
-            this._inputValue.value
+            parseInt(this._inputQuantity.value),
+            parseFloat(this._inputValue.value)
         );
     }
     _clearForm() {
