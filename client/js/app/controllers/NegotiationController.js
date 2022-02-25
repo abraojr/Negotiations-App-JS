@@ -31,19 +31,14 @@ class NegotiationController {
     add(event) {
         event.preventDefault();
 
-        ConnectionFactory
-            .getConnection()
-            .then(connection => {
+        let negotiation = this._createNegotiation();
 
-                let negotiation = this._createNegotiation();
-
-                new NegotiationDao(connection)
-                    .add(negotiation)
-                    .then(() => {
-                        this._listNegotiations.add(negotiation);
-                        this._message.text = "Negotiation added successfully.";
-                        this._clearForm();
-                    });
+        new NegotiationService()
+            .register(negotiation)
+            .then(message => {
+                this._listNegotiations.add(negotiation);
+                this.message.text = message;
+                this._clearForm();
             })
             .catch(error => this._message.text = error);
     }

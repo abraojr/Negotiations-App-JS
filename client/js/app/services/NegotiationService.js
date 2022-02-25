@@ -43,10 +43,24 @@ class NegotiationService {
     getNegotiations() {
         return Promise.all([this.getNegotiationOfTheWeek(), this.getNegotiationOfThePreviousWeek(), this.getNegotiationOfTheLastWeek()])
             .then(periods => {
-                let negotiations = periods.reduce((data, period) => data.concat(period), []);
+                let negotiations = periods
+                    .reduce((data, period) => data.concat(period), [])
+                    .map(data => new Negotiation(new Date(data.date), data.quantity, data.value));
                 return negotiations;
             }).catch(error => {
                 throw new Error(error);
+            });
+    }
+
+    register(negotiation) {
+
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegotiationDao(connection))
+            .then(dao => dao.add(negotiation))
+            .then(() => "Negotiation added successfully.")
+            .catch(() => {
+                throw new Error("Could not add the negotiation");
             });
     }
 }
