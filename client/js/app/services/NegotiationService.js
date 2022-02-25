@@ -53,14 +53,37 @@ class NegotiationService {
     }
 
     register(negotiation) {
-
         return ConnectionFactory
             .getConnection()
             .then(connection => new NegotiationDao(connection))
             .then(dao => dao.add(negotiation))
             .then(() => "Negotiation added successfully.")
-            .catch(() => {
-                throw new Error("Could not add the negotiation");
+            .catch((error) => {
+                console.log(error);
+                throw new Error("Could not add the negotiation.");
+            });
+    }
+
+    list() {
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegotiationDao(connection))
+            .then(dao => dao.listAll())
+            .catch(error => {
+                console.log(error);
+                throw new Error("Could not get the negotiations.");
+            });
+    }
+
+    delete() {
+        return ConnectionFactory
+            .getConnection()
+            .then(connection => new NegotiationDao(connection))
+            .then(dao => dao.deleteAll())
+            .then(() => "Negotiations successfully removed.")
+            .catch(error => {
+                console.log(error);
+                throw new Error("Could not remove negotiations.")
             });
     }
 }

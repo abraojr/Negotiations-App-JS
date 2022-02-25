@@ -9,19 +9,18 @@ class NegotiationController {
         this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty", "sortBy", "invertSortBy");
         this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
         this._currentOrder = "";
+        this._service = new NegotiationService();
         this._init();
     }
 
     _init() {
-        ConnectionFactory
-            .getConnection()
-            .then(connection => new NegotiationDao(connection))
-            .then(dao => dao.listAll())
-            .then(negotiations => negotiations.forEach(negotiation => this._listNegotiations.add(negotiation)))
-            .catch(error => {
-                console.log(error);
-                this._message.text = error;
-            });
+
+        this._service
+            .list()
+            .then(negotiations =>
+                negotiations.forEach(negotiation =>
+                    this._listNegotiations.add(negotiation)))
+            .catch(error => this._message.text = error);
 
         setInterval(() => {
             this.importNegotiations();
@@ -33,7 +32,7 @@ class NegotiationController {
 
         let negotiation = this._createNegotiation();
 
-        new NegotiationService()
+        this._service
             .register(negotiation)
             .then(message => {
                 this._listNegotiations.add(negotiation);
@@ -53,9 +52,9 @@ class NegotiationController {
     }
 
     importNegotiations() {
-        let service = new NegotiationService();
 
-        service.getNegotiations()
+        this._service
+            .getNegotiations()
             .then(negotiations =>
                 negotiations.filter(negotiation =>
                     !this._listNegotiations.negotiations.some(existingNegotiation =>
@@ -68,14 +67,13 @@ class NegotiationController {
 
     delete() {
 
-        ConnectionFactory
-            .getConnection()
-            .then(connection => new NegotiationDao(connection))
-            .then(dao => dao.deleteAll())
-            .then(message => {
-                this._message.text = message;
+        this._service
+            .delete()
+            .then(text => {
+                this._message.text = text;
                 this._listNegotiations.empty();
-            });
+            })
+            .catch(error => this.message.text = error);
     }
 
     _createNegotiation() {
