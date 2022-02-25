@@ -9,7 +9,10 @@ class NegotiationController {
         this._listNegotiations = new Bind(new ListNegotiations(), new NegotiationsView($("#negotiationsView")), "add", "empty", "sortBy", "invertSortBy");
         this._message = new Bind(new Message(), new MessageView($("#messageView")), "text");
         this._currentOrder = "";
+        this._init();
+    }
 
+    _init() {
         ConnectionFactory
             .getConnection()
             .then(connection => new NegotiationDao(connection))
@@ -19,6 +22,10 @@ class NegotiationController {
                 console.log(error);
                 this._message.text = error;
             });
+
+        setInterval(() => {
+            this.importNegotiations();
+        }, 3000)
     }
 
     add(event) {
