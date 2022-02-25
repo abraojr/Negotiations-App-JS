@@ -57,6 +57,7 @@ class NegotiationController {
             .import(this._listNegotiations.negotiations)
             .then(negotiations => negotiations.forEach(negotiation => {
                 this._listNegotiations.add(negotiation);
+                this._message.text = "Successfully imported negotiations of the period.";
             }))
             .catch(error => this._message.text = error);
     }
