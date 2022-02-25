@@ -1,14 +1,16 @@
 var ConnectionFactory = (function () {
 
-    var stores = ["negotiations"];
-    var version = 2;
-    var dbName = "negotiationapp";
+    const stores = ["negotiations"];
+    const version = 2;
+    const dbName = "negotiationapp";
+
     var connection = null;
+    var close = null;
 
     return class ConnectionFactory {
 
         constructor() {
-            throw new Error("Cannot create ConnectionFactory instances");
+            throw new Error("Cannot create ConnectionFactory instances.");
         }
 
         static getConnection() {
@@ -21,7 +23,13 @@ var ConnectionFactory = (function () {
                 };
 
                 openRequest.onsuccess = e => {
-                    if (!connection) connection = e.target.result;
+                    if (!connection) {
+                        connection = e.target.result;
+                        close = connection.close.bind(connection);
+                        connection.close = function () {
+                            throw new Error("You cannot directly close the connection.")
+                        }
+                    }
                     resolve(connection);
                 };
 
@@ -38,6 +46,13 @@ var ConnectionFactory = (function () {
                 if (connection.objectStoreNames.contains(store)) connection.deleteObjectStore(store);
                 connection.createObjectStore(store, { autoIncrement: true });
             });
+        }
+
+        static closeConnection() {
+            if (connection) {
+                close();
+                connection = null;
+            }
         }
     }
 })();
